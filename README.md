@@ -45,10 +45,10 @@ Application complète de gestion de campagnes email intégrée avec Gmail.
    - Type: **Web application**
    - Name: Campaign Creator
    - Authorized JavaScript origins:
-     - `http://localhost:8081`
+     - `http://localhost:8080`
      - `http://localhost:5173`
    - Authorized redirect URIs:
-     - `http://localhost:8081`
+     - `http://localhost:8080`
      - `http://localhost:5173`
 
 5. Configurez l'écran de consentement OAuth :
@@ -80,7 +80,7 @@ npm install
 npm run dev
 ```
 
-L'application sera accessible sur **http://localhost:8081**
+L'application sera accessible sur **http://localhost:8080**
 
 ## 📱 Utilisation
 
