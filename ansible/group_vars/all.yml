@@ -1,0 +1,16 @@
+---
+# Docker
+docker_version: "latest"
+
+# Application
+docker_image: "walidhhabou/campaign-creator-suite:latest"
+
+# Kubernetes
+kubernetes_version: "1.28"
+pod_network_cidr: "10.244.0.0/16"
+
+# Monitoring credentials
+rabbitmq_user: "admin"
+rabbitmq_password: "admin123"
+grafana_user: "admin"
+grafana_password: "admin123"

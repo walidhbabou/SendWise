@@ -1,0 +1,22 @@
+---
+- name: Check if node is already in cluster
+  shell: systemctl is-active kubelet
+  register: kubelet_status
+  ignore_errors: yes
+
+- name: Copy join command from master
+  copy:
+    src: /tmp/k8s-join-command.sh
+    dest: /tmp/k8s-join-command.sh
+    mode: '0755'
+  when: kubelet_status.rc != 0
+
+- name: Join Kubernetes cluster
+  shell: /tmp/k8s-join-command.sh
+  when: kubelet_status.rc != 0
+
+- name: Enable and start kubelet
+  systemd:
+    name: kubelet
+    state: started
+    enabled: yes

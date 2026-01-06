@@ -1,0 +1,40 @@
+---
+- name: Create Jenkins directory
+  file:
+    path: /opt/jenkins
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Copy Jenkins docker-compose file
+  template:
+    src: docker-compose.jenkins.yml.j2
+    dest: /opt/app/docker-compose.jenkins.yml
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+
+- name: Start Jenkins container
+  shell: |
+    cd /opt/app
+    sg docker -c "docker-compose -f docker-compose.jenkins.yml up -d"
+  become: yes
+  become_user: ubuntu
+
+- name: Wait for Jenkins to start
+  wait_for:
+    port: 8080
+    delay: 30
+    timeout: 300
+
+- name: Get Jenkins initial admin password
+  shell: docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  register: jenkins_password
+  changed_when: false
+  ignore_errors: yes
+
+- name: Display Jenkins initial password
+  debug:
+    msg: "Jenkins initial password: {{ jenkins_password.stdout }}"
+  when: jenkins_password.stdout is defined

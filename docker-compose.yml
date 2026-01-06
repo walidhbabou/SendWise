@@ -1,0 +1,19 @@
+services:
+  campaign-creator-suite:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: campaign-creator-suite
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+  
+
+networks:
+  app-network:
+    driver: bridge
+

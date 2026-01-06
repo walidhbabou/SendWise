@@ -1,0 +1,63 @@
+---
+- name: Check if Kubernetes is already initialized
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: k8s_initialized
+
+- name: Initialize Kubernetes cluster
+  shell: |
+    kubeadm init --pod-network-cidr={{ pod_network_cidr }} --apiserver-advertise-address={{ ansible_default_ipv4.address }}
+  when: not k8s_initialized.stat.exists
+  register: kubeadm_init
+
+- name: Create .kube directory for ubuntu user
+  file:
+    path: /home/ubuntu/.kube
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Copy admin.conf to ubuntu user
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/ubuntu/.kube/config
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+    remote_src: yes
+
+- name: Install Calico network plugin
+  become: yes
+  become_user: ubuntu
+  shell: |
+    kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+  when: not k8s_initialized.stat.exists
+
+- name: Get join command
+  shell: kubeadm token create --print-join-command
+  register: join_command
+  when: not k8s_initialized.stat.exists
+
+- name: Save join command to file
+  copy:
+    content: "{{ join_command.stdout }}"
+    dest: /tmp/k8s-join-command.sh
+    mode: '0755'
+  when: not k8s_initialized.stat.exists
+
+- name: Fetch join command to local
+  fetch:
+    src: /tmp/k8s-join-command.sh
+    dest: /tmp/k8s-join-command.sh
+    flat: yes
+  when: not k8s_initialized.stat.exists
+
+- name: Wait for all nodes to be ready
+  become: yes
+  become_user: ubuntu
+  shell: kubectl get nodes
+  register: nodes_status
+  until: nodes_status.stdout.find("NotReady") == -1
+  retries: 30
+  delay: 10

@@ -1,0 +1,20 @@
+---
+- name: Create application directory
+  file:
+    path: /opt/app
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Copy application docker-compose template
+  template:
+    src: docker-compose.app.yml.j2
+    dest: /opt/app/docker-compose.yml
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+
+- name: Display worker node info
+  debug:
+    msg: "Worker node ready. Deploy your application with: docker-compose -f /opt/app/docker-compose.yml up -d"

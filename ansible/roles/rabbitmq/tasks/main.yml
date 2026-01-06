@@ -1,0 +1,56 @@
+---
+- name: Create monitoring directory
+  file:
+    path: /opt/monitoring
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Copy Prometheus configuration
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/monitoring/prometheus.yml
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+
+- name: Copy monitoring docker-compose file
+  template:
+    src: docker-compose.monitoring.yml.j2
+    dest: /opt/app/docker-compose.monitoring.yml
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+
+- name: Start monitoring services
+  shell: |
+    cd /opt/app
+    docker-compose -f docker-compose.monitoring.yml up -d
+  become: yes
+  become_user: ubuntu
+
+- name: Wait for RabbitMQ to start
+  wait_for:
+    port: 15672
+    delay: 10
+    timeout: 300
+
+- name: Wait for Grafana to start
+  wait_for:
+    port: 3001
+    delay: 10
+    timeout: 300
+
+- name: Wait for Prometheus to start
+  wait_for:
+    port: 9090
+    delay: 10
+    timeout: 300
+
+- name: Display monitoring URLs
+  debug:
+    msg:
+      - "RabbitMQ Management: http://{{ ansible_host }}:15672 ({{ rabbitmq_user }}/{{ rabbitmq_password }})"
+      - "Grafana: http://{{ ansible_host }}:3001 ({{ grafana_user }}/{{ grafana_password }})"
+      - "Prometheus: http://{{ ansible_host }}:9090"

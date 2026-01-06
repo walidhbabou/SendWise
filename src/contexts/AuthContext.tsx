@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('Login Failed');
     },
     scope: 'https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.compose',
+    ux_mode: 'popup',
   });
 
   const logout = () => {

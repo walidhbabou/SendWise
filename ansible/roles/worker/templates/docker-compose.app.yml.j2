@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  app:
+    image: {{ docker_image | default('nginx:alpine') }}
+    container_name: campaign-app
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
