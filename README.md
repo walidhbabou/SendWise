@@ -252,3 +252,4 @@ Pour toute question ou problème, créez une issue sur GitHub.
 ---
 
 Fait avec ❤️ pour simplifier vos campagnes email
+# Test deployment Sat, Jan 10, 2026  7:39:28 PM
