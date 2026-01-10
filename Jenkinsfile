@@ -1,10 +1,6 @@
 pipeline {
     agent any
     
-    triggers {
-        githubPush()
-    }
-    
     
     environment {
         DOCKER_IMAGE = 'walidhbabou/campaign-creator-suite'
@@ -14,8 +10,19 @@ pipeline {
         MASTER_HOST = '10.0.1.185'
         MASTER_USER = 'ubuntu'
     }
+
+    triggers {
+        githubPush()
+    }
     
     stages {
+        stage('Checkout') {
+            steps {
+                echo '📥 Checking out from GitHub...'
+                checkout scm
+            }
+        }
+        
         stage('Prepare') {
             steps {
                 echo '📦 Preparing workspace...'
