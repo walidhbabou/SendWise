@@ -1,6 +1,12 @@
 pipeline {
     agent any
     
+    options {
+        timestamps()
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+    }
+    
     environment {
         DOCKER_IMAGE = 'walidhbabou/campaign-creator-suite'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
@@ -10,11 +16,19 @@ pipeline {
         MASTER_USER = 'ubuntu'
     }
     
+    triggers {
+        githubPush()
+    }
+    
     stages {
         stage('Checkout') {
             steps {
                 echo '📥 Checking out from GitHub...'
-                checkout scm
+                checkout scmGit(
+                    branches: [[name: '*/main']],
+                    extensions: [],
+                    userRemoteConfigs: [[url: 'https://github.com/walidhbabou/SendWise.git']]
+                )
             }
         }
         
