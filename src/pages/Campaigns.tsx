@@ -158,7 +158,7 @@ const Campaigns = () => {
                       <TableHead>Groupe</TableHead>
                       <TableHead>Destinataires</TableHead>
                       <TableHead>Statut</TableHead>
-                      <TableHead>Date d'envoyer mails</TableHead>
+                      <TableHead>Date d'envoyer </TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
