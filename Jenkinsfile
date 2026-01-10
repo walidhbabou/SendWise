@@ -1,7 +1,6 @@
 pipeline {
     agent any
     
-    
     environment {
         DOCKER_IMAGE = 'walidhbabou/campaign-creator-suite'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
@@ -9,10 +8,6 @@ pipeline {
         K8S_DEPLOYMENT = 'campaign-app'
         MASTER_HOST = '10.0.1.185'
         MASTER_USER = 'ubuntu'
-    }
-
-    triggers {
-        githubPush()
     }
     
     stages {
