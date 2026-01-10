@@ -5,6 +5,7 @@ pipeline {
         githubPush()
     }
     
+    
     environment {
         DOCKER_IMAGE = 'walidhbabou/campaign-creator-suite'
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
