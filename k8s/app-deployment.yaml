@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: campaign-app
-        image: walidhhabou/campaign-creator-suite:latest
+        image: walidhbabou/campaign-creator-suite:latest
         ports:
         - containerPort: 80
           name: http
